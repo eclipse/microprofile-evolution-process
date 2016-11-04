@@ -25,7 +25,10 @@ Mailinglist thread: [Discussion thread topic for that proposal](https://groups.g
 ## Motivation
 
 Standardise Configuration API so the microservices can run in different environments seemlessly. The proposed Configuration should solve the follow three issues:
-1. 
+1. Allow the property files defined in different locations - inside applications and outside applications
+2. Provide a way to order the property files
+3. Cope with dynamic changes
+
 
 ## Proposed solution
 
