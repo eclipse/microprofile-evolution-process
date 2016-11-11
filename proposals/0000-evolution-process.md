@@ -1,6 +1,6 @@
 # Microprofile Evolution Process
 
-* Proposal: [MP-0001](0001-evolution-process.md)
+* Proposal: [MP-0000](0000-evolution-process.md)
 * Authors: [Heiko Braun](https://github.com/heiko-braun)
 * Review Manager: TBD
 * Status: **Awaiting review**
