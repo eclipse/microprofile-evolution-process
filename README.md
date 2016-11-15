@@ -1,11 +1,24 @@
-# Microprofile Evolution
-
-**Before you initiate a pull request**, please read the process document. Ideas should be thoroughly discussed on the [microprofile mailing list](https://groups.google.com/forum/#!forum/microprofile) first.
+# MicroProfile Evolution
 
 This repository tracks the ongoing evolution of Microprofile. It contains:
 
 * Goals for upcoming Microprofile releases (this document).
 * The [Microprofile evolution process](process.md) that governs the evolution of Microprofile.
+* A repository of [accepted proposals](/proposals)
+
+# Proposing an extension to the MicroProfile
+
+## Steps to submit a proposal
+
+1.  **Before you initiate a pull request**, please read the process document. Ideas should be thoroughly discussed on the [microprofile mailing list](https://groups.google.com/forum/#!forum/microprofile) first.
+
+2. Proposals need to follow the [template](0000-template.md). In order to submit a proposal copy that template to the `proposals` directory and provide all relevant information to your proposal. The "what, how and why" of your proposal needs to be sufficiently clear.
+
+3. Send a PR to this repository, including your proposal document.
+
+4. Work through the comments and feedback to finalize the proposal and revise it if needed.
+
+# Roadmap
 
 This document describes goals for the Microprofile on a per-release
 basis, usually listing minor releases adding to the currently shipping
