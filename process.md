@@ -25,9 +25,9 @@ mailing list]((https://groups.google.com/forum/#!forum/microprofile)). Before po
 please see the section "What goes into a review?" below.
 
 The Microprofile [core team](https://microprofile.io/community/#core-team) is
-responsible for the strategic direction of Microprofile. Core team members
+responsible for the strategic direction of Microprofile. *Core team members
 initiate, participate in, and manage the public review of proposals
-and have the authority to accept or reject changes to Microprofile.
+and have the authority to accept or reject changes to Microprofile.*
 
 ## What goes into a review?
 
@@ -55,18 +55,13 @@ Please state explicitly whether you believe that the proposal should be accepted
 
 ## Review process
 
-The review process for a particular proposal begins when a member of
-the core team accepts a pull request of a new or updated proposal into
-the [Microprofile repository](https://github.com/microprofile/evolution). That core team
-member becomes the *review manager* for the proposal. The proposal
-is assigned a proposal number (if it is a new proposal), then enters
-the review queue.
+The review process for a particular proposal begins with a pull request of a new or updated proposal into
+the [Microprofile repository](https://github.com/microprofile/evolution). The  core team and the wider community will review the proposal and comment on it.
 
-The review manager will work with the proposal authors to schedule the
-review. Reviews usually last a single week, but can run longer for
+Reviews usually last one or two weeks, but can run longer for
 particularly large or complex proposals.
 
-When the scheduled review period arrives, the review manager will post
+When a review is scheduled, the core team will post
 the proposal to the [Microprofile mailing
 list](https://groups.google.com/forum/#!forum/microprofile) with the subject "[Review]"
 followed by the proposal title and update the list of active
@@ -75,11 +70,10 @@ available to answer questions, address feedback, and clarify their
 intent during the review period.
 
 After the review has completed, the core team will make a decision on
-the proposal. The review manager is responsible for determining
-consensus among the core team members, then reporting their decision
-to the proposal authors and mailing list. The review manager will
-update the proposal's state in the [Microprofile
-repository](https://github.com/microprofile/evolution) to reflect that decision.
+the proposal. The core team members will report their decision
+to the proposal authors and mailing list. The proposal state
+in the [Microprofile
+repository](https://github.com/microprofile/evolution) will be updated to reflect that decision.
 
 ## Proposal states
 A given proposal can be in one of several states:
@@ -89,12 +83,6 @@ A given proposal can be in one of several states:
   document and updated in the [list of proposals](proposals.xml). When the
   review period begins, the review manager will update the state to
   *Active review*.
-* **Scheduled for review (MONTH DAY...MONTH DAY)**: The public review of the proposal
-  on the [Microprofile mailing list](https://groups.google.com/forum/#!forum/microprofile)
-  has been scheduled for the specified date range.
-* **Active review (MONTH DAY...MONTH DAY)**: The proposal is undergoing public review
-  on the [Microprofile mailing list](https://groups.google.com/forum/#!forum/microprofile).
-  The review will continue through the specified date range.
 * **Returned for revision**: The proposal has been returned from review
   for additional revision to the current draft.
 * **Withdrawn**: The proposal has been withdrawn by the original submitter.
@@ -121,8 +109,8 @@ sent to the Microprofile-announce and Microprofile mailing lists:
 
 Hello Microprofile community,
 
-The review of "\<\<PROPOSAL NAME>>" begins now and runs through \<\<REVIEW
-END DATE>>. The proposal is available here:
+The review of "PROPOSAL NAME" begins now and runs through REVIEW
+END DATE. The proposal is available here:
 
 > <https://github.com/microprofile/evolution/blob/master/proposals/NNNN-proposal.md>
 
@@ -131,23 +119,11 @@ should be sent to the Microprofile mailing list at
 
 > <https://groups.google.com/forum/#!forum/microprofile>
 
-or, if you would like to keep your feedback private, directly to the
-review manager. When replying, please try to keep the proposal link at
-the top of the message:
-
-> Proposal link:
->>  http://linkToProposal
-
->  Reply text
-
->>  Other replies
-
 ##### What goes into a review?
 
 The goal of the review process is to improve the proposal under review
 through constructive criticism and, eventually, determine the direction of
-Microprofile. When writing your review, here are some questions you might want to
-answer in your review:
+Microprofile. When writing your review, here are some questions you might want to answer in your review:
 
 * What is your evaluation of the proposal?
 * Is the problem being addressed significant enough to warrant a
@@ -164,8 +140,6 @@ More information about the Microprofile evolution process is available at
 
 Thank you,
 
--\<\<REVIEW MANAGER NAME>>
-
-Review Manager
+The MicroProfile core team
 
 ---
