@@ -1,8 +1,7 @@
 # Feature name
 
 * Proposal: [MP-NNNN](NNNN-filename.md)
-* Authors: [Author 1](https://github.com/<yourname>), [Author 2](https://github.com/<yourname>)
-* Review Manager: TBD
+* Authors: [PUT YOUR NAME HERE](https://github.com/<yourname>), [PUT YOUR NAME HERE](https://github.com/<yourname>)
 * Status: **Awaiting review**
 
 *During the review process, add the following fields as needed:*
@@ -31,7 +30,7 @@ Describe your solution to the problem. Provide examples and describe
 how they work. Show how your solution is better than current
 workarounds: is it cleaner, safer, or more efficient?
 
-## Detailed design
+## Detailed design (if applicable)
 
 Describe the design of the solution in detail. If it involves new
 syntax in the language, show the additions and changes to the Microprofile
@@ -40,7 +39,7 @@ comments detailing what it does. The detail in this section should be
 sufficient for someone who is *not* one of the authors to be able to
 reasonably implement the feature.
 
-## Impact on existing code
+## Impact on existing code (if applicable)
 
 Describe the impact that this change will have on existing code. Will some
 microprofile applications stop compiling due to this change? Will applications still
