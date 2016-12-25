@@ -11,16 +11,16 @@
 
 ## Introduction
 
-This document describes a protocol to be used by components that need to ensure a compatible wireformat, agreed upon semantics and possible forms of interactions between system components that need to determine the “liveliness” of computing nodes in a bigger system.
+This document describes a protocol (wireformat, semantics and possible forms of interactions) between system components that need to determine the “liveliness” of computing nodes in a bigger architecture.
 
 
 Mailinglist thread: [Discussion thread topic for that proposal](https://groups.google.com/forum/#!topic/microprofile/jIZAKiu76ys)
 
 ## Motivation
 
-The rationale for health checks is to signal the state of a computing node to other machines (i.e. kubernetes service controller), with the primary use case being cloud infrastructure environments where automated processes maintain the state of computing nodes.
+Health checks are used to probe the state of a computing node from another other machine (i.e. kubernetes service controller) with the primary target being cloud infrastructure environments where automated processes maintain the state of computing nodes. In this scenario health checks are used to determine if a computing node needs to be discarded (terminated, shutdown) and eventually replaced by another (healthy) instance.
 
-It’s not intended (although could be used) as a monitoring solution for humans.
+It’s not intended (although could be used) as a monitoring solution for human operators.
 
 ## Proposed solution
 
@@ -33,11 +33,11 @@ The proposed solution breaks down into two parts:
 
 ### Protocol
 
-For a detailed description of the protocol see the complementary document the describes [the protocol and wireformat](0003-spec.md)
+For a detailed description of the protocol see the companion document that the describes [the protocol and wireformat](0003-spec.md)
 
 ### Java API
 
-The main API to express health check results is the `HealthStatus` interface:
+The main API to describe health check results (responses) is the `HealthStatus` interface:
 
 ```
 File path = new File(System.getProperty("user.home"));
