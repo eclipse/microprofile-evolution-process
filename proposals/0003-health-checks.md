@@ -7,7 +7,7 @@
 
 *During the review process, add the following fields as needed:*
 
-* Decision Notes: [Discussion thread topic covering the  Rationale](https://groups.google.com/forum/#!forum/microprofile), [Discussion thread topic with additional Commentary](https://groups.google.com/forum/#!forum/microprofile)
+* Decision Notes: [Discussion thread topic covering the  Rationale](https://groups.google.com/forum/#!topic/microprofile/GDhgOguDIXw)
 
 ## Introduction
 
