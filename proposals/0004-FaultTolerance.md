@@ -42,7 +42,7 @@ Currently there are at least two libraries to provide fault tolerance. It is bes
 
 
 ## Proposed solution
-Separating the responsibility of executing logic (Runnables/Callables/etc) from guiding when execution should take place (through retry policies, bulkheads, circuit breakers). In this way, failure handling strategies merely become configuration that can influence executions, and the execution API itself is just responsible for receiving some configuration and performing executions.
+Separating the responsibility of executing logic (Runnables/Callables/etc) from guiding when execution should take place (through retry policies, bulkheads, circuit breakers, timeout). In this way, failure handling strategies merely become configuration that can influence executions, and the execution API itself is just responsible for receiving some configuration and performing executions.
 
 By default, a failure handling strategy could assume, for example, that any exception is a failure. But in some cases, a null or negative return value could be considered a failure. Users should be able to define this, and a user's definition of a failure is what should influence execution. (This all is what the Failsafe RetryPolicy's retryOn, retryWhen, abortIf, etc methods are all about - defining a failure).
 
@@ -50,32 +50,34 @@ Standardise the Fallback, Bulkhead and CircuitBreaker APIs and provide implement
 * A Java API to privide RetryPolicy
 * A Java API to provide FallBack
 * A Java API to provide BulkHead
-* A Java API to provide circuitBreaker
+* A Java API to provide CircuitBreaker
 
 ## Detailed design
 
-
-An instance of RetryPolicy, FallBack and BulkHeader can be injected to the clients and then they can be configured as follows.
+The design is based on CDI programming model. An instance of RetryPolicy, FallBack and BulkHeader, Execution can be injected to the clients and then they can be configured as follows.
 
 * RetryPolicy: A policy define the retry criteria
 RetryPolicy rp = retryPolicy.retryOn(TimeOutException.class)
   .withDelay(2, TimeUnit.SECONDS)
   .withMaxRetries(2);
 When TimeOutException was received, delay 2 seconds and then retry 2 more times.
-Connection connection = Execution.with(rp).withFallBack(null).get(this::connect)
+Connection connection = execution.with(rp).withFallBack(null).get(this::connect)
 The above suppress the TimOutException and provide a default result.
 
 * CircuitBreaker: a rule to define when to close the circuit
 CircuitBreaker cb = circuitBreaker.withFailureThreshold(3, 10)
   .withSuccessThreshold(5)
   .withDelay(1, TimeUnit.MINUTES);
-Connection connect = Execution.with(cb).run(this::connect);  
+Connection connect = execution.with(cb).run(this::connect);  
 When 3 of 10 execution failures occurs on a circuit breaker, the circuit is opened and further execution requests fail with CircuitBreakerOpenException. After a delay of 1 min, the circuit is half-opened and trail executions are attempted to determine whether the circuit should be closed or opened again. If the trial executions exceed a success threshold 5, the breaker is closed again and executions will proceed as normal.
 
 * Bulkhead
 BulkHead bh = bulkHead.withPool("myPool");
-Connection connect = Execution.with(bh).run(this::connect);
+Connection connect = execution.with(bh).run(this::connect);
 Bulkhead provides a thread pool with a fixed number of threads in order to achieve thread and failure isolation.  
+
+* Timeout
+Connection connect = execution.withTimOut(2, TimeUnit.SECONDS).run(this::connect);  
 ## Impact on existing code
 
 n/a
