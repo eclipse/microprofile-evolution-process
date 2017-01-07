@@ -89,7 +89,7 @@ Connection connect = execution.with(cb).run(this::connect);
 
 When 3 of 10 execution failures occurs on a circuit breaker, the circuit is opened and further execution requests fail with `CircuitBreakerOpenException`. After a delay of 1 min, the circuit is half-opened and trail executions are attempted to determine whether the circuit should be closed or opened again. If the trial executions exceed a success threshold 5, the breaker is closed again and executions will proceed as normal.
 
-### Bulkhead
+### BulkHead
 
 ```
 BulkHead bh = bulkHead.withPool("myPool");
@@ -97,7 +97,11 @@ Connection connect = execution.with(bh).run(this::connect);
 ```
 
 Bulkhead provides a thread pool with a fixed number of threads in order to achieve thread and failure isolation.
-  
+### Timeout
+
+```
+Connection connect = execution.withTimOut(2, TimeUnit.SECONDS).run(this::connect);
+```
 ## Impact on existing code
 
 n/a
