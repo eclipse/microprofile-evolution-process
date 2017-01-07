@@ -13,17 +13,19 @@
 It is increasingly important to build fault tolerant micro services. Fault tolerance is about leveraging different strategies to guide the execution and result of some logic. Retry policies, bulkheads, and circuit breakers are popular concepts in this area. They dictate whether and when executions should take place, and fallbacks offer an alternative result when an execution does not complete successfully. 
 
 As mentioned above, the Fault Tolerance proposal is to focus the aspects: TimeOut, RetryPolicy, Fallback, bulkhead and circuit breaker.
+
 * TimeOut: Define a duration for timeout
 * RetryPolicy: Define a criteria on when to retry 
 * Fallback: provide an alternative solution for a failed execution.
 * Bulkhead: isolate failures in part of the system while the rest part of the system can still function.
 * CircuitBreaker: offer a way of fail fast by automatically failing execution to prevent the system overloading and indefinite wait or timeout by the clients.
 
-The main design is to separate execution logic from execution. The execution can be configured with fault tolerance policies, such as RetryPolicy, Fallback, Bulkheader and CircuitBreaker. 
+The main design is to separate execution logic from execution. The execution can be configured with fault tolerance policies, such as RetryPolicy, fallback, Bulkheader and CircuitBreaker. 
 
-Hystrix(https://github.com/Netflix/Hystrix) and Failsafe(https://github.com/jhalterman/failsafe) are two popular libraries for handling failures. This proposal is to define a standard API and approach for applications to follow in order to achieve the fault tolerance.
+[Hystrix](https://github.com/Netflix/Hystrix) and [Failsafe](https://github.com/jhalterman/failsafe) are two popular libraries for handling failures. This proposal is to define a standard API and approach for applications to follow in order to achieve the fault tolerance.
 
 The requirements are as follows:
+
 * Loose coupling: Execution logic should not know anything about the execution status or fault tolerance. 
 * Failure handling strategy should be configured when the execution takes place.
 * Support for synchronous and asynchronous execution
@@ -32,6 +34,7 @@ The requirements are as follows:
 * Some Failure policy configurations, e.g. CircuitBreaker, RetryPolicy, can be used stand alone. For example, it has been very useful for circuit breakers to be standalone constructs which can be plugged into and intentionally shared across multiple executions. Likewise for retry policies. Additionally, an Execution construct can be offered that allows retry policies to be applied to some logic in a standalone, manually controlled way.
 
 Advanced requirements:
+
 * Event Hooks: Since this approach to fault tolerance involves handing execution over to some foreign code, it's very useful to be able to learn when executions are taking place and under what circunstances (onRetry, onFailedAttempt, onFailure, etc).
 
 Mailinglist thread: [Discussion thread topic for that proposal](https://groups.google.com/forum/#!topic/microprofile/ezFC1TLGozU)
@@ -44,7 +47,7 @@ Currently there are at least two libraries to provide fault tolerance. It is bes
 
 Separate the responsibility of executing logic (Runnables/Callables/etc) from guiding when execution should take place (through retry policies, bulkheads, circuit breakers). In this way, failure handling strategies become configuration that can influence executions, and the execution API itself is just responsible for receiving some configuration and performing executions.
 
-By default, a failure handling strategy could assume, for example, that any exception is a failure. But in some cases, a `null` or negative return value could also be considered a failure. Users should be able to define this, and a user's definition of a failure is what should influence execution. (This all is what the Failsafe RetryPolicy's retryOn, retryWhen, abortIf, etc methods are all about - defining a failure).
+By default, a failure handling strategy could assume, for example, that any exception is a failure. But in some cases, a `null` or negative return value could also be considered a failure. Users should be able to define this, and a user's definition of a failure is what should influence execution. (This all is what the Failsafe RetryPolicy's `retryOn`, `retryWhen`, `abortIf`, etc methods are all about - defining a failure).
 
 Standardise the Fallback, Bulkhead and CircuitBreaker APIs and provide implementations.
 
@@ -55,7 +58,7 @@ Standardise the Fallback, Bulkhead and CircuitBreaker APIs and provide implement
 
 ## Detailed design
 
-The Design is built on CDI programming model. An instance of Execution, RetryPolicy, FallBack and BulkHeader can be injected to the clients and then they can be configured as follows.
+The Design is built on CDI programming model. An instance of `Execution`, `RetryPolicy`, `CircuitBreaker` and `BulkHeader` can be injected to the clients and then they can be configured as follows.
 
 ### RetryPolicy: A policy define the retry criteria
 
