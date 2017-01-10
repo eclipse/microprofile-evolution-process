@@ -75,7 +75,7 @@ When `TimeOutException` was received, delay 2 seconds and then retry 2 more time
 Connection connection = execution.with(rp).withFallBack(null).get(this::connect)
 ```
 
-The above suppress the `TimOutException` and provide a default result.
+The above suppress the `TimeOutException` and provide a default result.
 
 ### CircuitBreaker: a rule to define when to close the circuit
 
