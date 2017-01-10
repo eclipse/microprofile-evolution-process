@@ -20,7 +20,7 @@ As mentioned above, the Fault Tolerance proposal is to focus the aspects: TimeOu
 * Bulkhead: isolate failures in part of the system while the rest part of the system can still function.
 * CircuitBreaker: offer a way of fail fast by automatically failing execution to prevent the system overloading and indefinite wait or timeout by the clients.
 
-The main design is to separate execution logic from execution. The execution can be configured with fault tolerance policies, such as RetryPolicy, fallback, Bulkheader and CircuitBreaker. 
+The main design is to separate execution logic from execution. The execution can be configured with fault tolerance policies, such as RetryPolicy, fallback, Bulkhead and CircuitBreaker. 
 
 [Hystrix](https://github.com/Netflix/Hystrix) and [Failsafe](https://github.com/jhalterman/failsafe) are two popular libraries for handling failures. This proposal is to define a standard API and approach for applications to follow in order to achieve the fault tolerance.
 
