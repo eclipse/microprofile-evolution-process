@@ -30,12 +30,12 @@ The requirements are as follows:
 * Failure handling strategy should be configured when the execution takes place.
 * Support for synchronous and asynchronous execution
 * Integration with 3rd party asynchronous APIs. This is necessary to handle executions that are completed at some time in the future, where retries will need to be explicitly scheduled from within the asynchronous execution. This is common when working with various 3rd party asynchronous tools such as Netty, RxJava, Vert.x, etc.
-* Support immutable failure handling policy configuration
+* Require immutable failure handling policy configuration
 * Some Failure policy configurations, e.g. CircuitBreaker, RetryPolicy, can be used stand alone. For example, it has been very useful for circuit breakers to be standalone constructs which can be plugged into and intentionally shared across multiple executions. Likewise for retry policies. Additionally, an Execution construct can be offered that allows retry policies to be applied to some logic in a standalone, manually controlled way.
 
 Advanced requirements:
 
-* Event Hooks: Since this approach to fault tolerance involves handing execution over to some foreign code, it's very useful to be able to learn when executions are taking place and under what circunstances (onRetry, onFailedAttempt, onFailure, etc).
+* Event Hooks: Since this approach to fault tolerance involves handing execution over to some foreign code, it's very useful to be able to learn when executions are taking place and under what circumstances (onRetry, onFailedAttempt, onFailure, etc).
 
 Mailinglist thread: [Discussion thread topic for that proposal](https://groups.google.com/forum/#!topic/microprofile/ezFC1TLGozU)
 
@@ -51,7 +51,7 @@ By default, a failure handling strategy could assume, for example, that any exce
 
 Standardise the Fallback, Bulkhead and CircuitBreaker APIs and provide implementations.
 
-* A Java API to privide RetryPolicy
+* A Java API to provide RetryPolicy
 * A Java API to provide FallBack
 * A Java API to provide BulkHead
 * A Java API to provide CircuitBreaker
@@ -71,11 +71,12 @@ RetryPolicy rp = retryPolicy.retryOn(TimeOutException.class)
 
 When `TimeOutException` was received, delay 2 seconds and then retry 2 more times.
 
+### Fallback 
 ```
-Connection connection = execution.with(rp).withFallBack(null).get(this::connect)
+Connection connection = execution.with(rp).withFallBack(this::connectToBackup).get(this::connectToPrimary)
 ```
 
-The above suppress the `TimeOutException` and provide a default result.
+If `TimeOutException` is thrown, compute an alternative result such as from a backup resource.
 
 ### CircuitBreaker: a rule to define when to close the circuit
 
