@@ -6,7 +6,7 @@
 
 *During the review process, add the following fields as needed:*
 
-* Decision Notes: [Discussion thread topic covering the  Rationale](https://groups.google.com/forum/#!topic/microprofile/gakCq7kSBsY), [Discussion thread topic with additional Commentary](https://groups.google.com/forum/#!forum/microprofile)
+* Decision Notes: [Discussion thread topic covering the  Rationale](https://groups.google.com/forum/#!topic/microprofile/gakCq7kSBsY), [Discussion thread topic with additional Commentary](https://groups.google.com/forum/#!topic/microprofile/l2aJGPB8Sxc)
 
 ## Introduction
 
@@ -150,4 +150,3 @@ Existing services that desire to implement JWT RBAC must configure the container
 ## Alternatives considered
 
 None
-
