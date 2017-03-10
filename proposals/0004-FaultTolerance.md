@@ -58,30 +58,142 @@ Standardise the Fallback, Bulkhead and CircuitBreaker APIs and provide implement
 
 ## Detailed design
 
-The Design is built on CDI programming model. An instance of `Execution`, `RetryPolicy`, `CircuitBreaker` and `BulkHeader` can be injected to the clients and then they can be configured as follows.
 
-### RetryPolicy: A policy define the retry criteria
+### CDI-based approach 
+Use interceptor and annotation to specify the execution and policy configration.
+Define an interceptor binding to specify whether the execution is sync or asyn. Two interceptors should be provided by the implementation: AsyncExecutorInterceptor and SyncExecutorInterceptor
+```
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ ElementType.METHOD, ElementType.TYPE })
+@InterceptorBinding
+@Inherited
+public @interface Execution {
+
+    Type value() default Type.SYNC;
+
+    enum Type {
+        ASYNC, SYNC;
+    };
+}
+```
+#### RetryPolicy: A policy to define the retry criteria
+
+An annotation to specify the max retries, delays, maxDuration, Duration unit, jitter, retryOn, bakeOff, fallback etc.
+```
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ ElementType.METHOD, ElementType.TYPE })
+public @interface Retry {
+   
+    int maxRetries() default 3;
+
+    int delay() default 0;
+
+    TimeUnit delayUnit() default TimeUnit.SECONDS;
+
+    int maxDuration() default 20;
+    TimeUnit durationUnit() default TimeUnit.SECONDS;
+    int jitter() default 2;
+
+    int jitterFactor() default 2;
+
+    TimeUnit jitterDelayUnit() default TimeUnit.SECONDS;
+
+    int backOff() default 2;
+
+    int backOffFactor() default 2;
+
+    TimeUnit bakeOffUnit() default TimeUnit.SECONDS;
+
+    Class<? extends Throwable>[] retryOn() default { RuntimeException.class };
+
+    Class<? extends Throwable>[] aboartOn() default { RuntimeException.class };
+	String fallback() default "";
+}
 
 
 ```
-RetryPolicy rp = retryPolicy.retryOn(TimeOutException.class)
+#### CircuitBreaker: a rule to define when to close the circuit
+
+```
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Target({ ElementType.TYPE, ElementType.METHOD })
+public @interface CircuitBreaker {
+
+    Class<? extends Throwable>[] failOn() default RuntimeException.class;
+
+    long delay() default 2;
+
+    TimeUnit delayUnit() default TimeUnit.SECONDS;
+
+    long failThreshold() default 2;
+
+    long successThreshold() default 2;
+
+    long timeOut() default 2;
+
+}
+
+
+
+```
+#### Bulkhead - threadpool or semaphore styel
+```
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Target({ ElementType.METHOD, ElementType.TYPE })
+public @interface Bulkhead {
+    public enum Mode {
+        THREADPOOL, SEMAPHORE;
+
+        private Mode() {
+        }
+    }
+
+    Mode value() default Mode.THREADPOOL;
+}
+```
+#### Usage
+An interceptor and fault tolerance policy can be applied to a bean or methods.
+```
+@ApplicationScoped
+@Execution
+public class FaultToleranceBean {
+   int i = 0;
+   @Retry(maxRetries = 2)
+   public void doWork() {
+      System.out.println("Doing work. "+i++);
+      if(i < 3) {
+         throw new RuntimeException("Boop");
+      }
+   }
+}
+```
+### Non-CDI approach
+Some application don't use CDI but would like to utilise the fault tolerance feature. 
+
+#### Retry 
+```
+RetryPolicy rp = FaultToleranceFactory.getInstance(RetryPolicy.class).retryOn(TimeOutException.class)
   .withDelay(2, TimeUnit.SECONDS)
   .withMaxRetries(2);
 ```
 
 When `TimeOutException` was received, delay 2 seconds and then retry 2 more times.
 
-### Fallback 
+#### Fallback 
 ```
-Connection connection = execution.with(rp).withFallBack(this::connectToBackup).get(this::connectToPrimary)
+Connection connection = FaultToleranceFactory.getInstance(Execution.class).with(rp).withFallBack(this::connectToBackup).get(this::connectToPrimary)
 ```
 
 If `TimeOutException` is thrown, compute an alternative result such as from a backup resource.
 
-### CircuitBreaker: a rule to define when to close the circuit
+#### CircuitBreaker: a rule to define when to close the circuit
 
 ```
-CircuitBreaker cb = circuitBreaker
+CircuitBreaker cb = FaultToleranceFactory.getInstance(CircuitBreaker.class)
   .withFailureThreshold(3, 10)
   .withSuccessThreshold(5)
   .withDelay(1, TimeUnit.MINUTES);
@@ -90,18 +202,18 @@ Connection connect = execution.with(cb).run(this::connect);
 
 When 3 of 10 execution failures occurs on a circuit breaker, the circuit is opened and further execution requests fail with `CircuitBreakerOpenException`. After a delay of 1 min, the circuit is half-opened and trail executions are attempted to determine whether the circuit should be closed or opened again. If the trial executions exceed a success threshold 5, the breaker is closed again and executions will proceed as normal.
 
-### BulkHead
+### Bulkhead
 
 ```
-BulkHead bh = bulkHead.withPool("myPool");
-Connection connect = execution.with(bh).run(this::connect);
+BulkHead bh = FaultToleranceFactory.getInstance(Bulkhead.class).withPool("myPool");
+Connection connect = FaultToleranceFactory.getInstance(Executor.class).with(bh).run(this::connect);
 ```
 
 Bulkhead provides a thread pool with a fixed number of threads in order to achieve thread and failure isolation.
 ### Timeout
 
 ```
-Connection connect = execution.withTimOut(2, TimeUnit.SECONDS).run(this::connect);
+Connection connect = FaultToleranceFactory.getInstance(Executor.class).withCircuitBreaker(circuitBreaker).withTimeOut(2, TimeUnit.SECONDS).run(this::connect);
 ```
 ## Impact on existing code
 
