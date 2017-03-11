@@ -143,6 +143,15 @@ From an authorization perspective, we recommend two specific claims to carry rol
 ```
 The **realm_access** claim can be used to define which roles were granted to a subject at the realm or security domain level. On the other hand, the **resource_access** claim allows to define a different set of roles which are associated with a specific resource server or service.
 
+It is recommend that signature portion of the token should be signed using the RS256 algorithm using the RSA private key associated with the realm so that clients and services may verify the signature using the RSA realm public key. This corresponds to a JWT header with the following **alg** and **typ** claims:
+```
+{
+  "alg": "RS256",
+  "typ": "JWT",
+  "kid": "..."
+}
+```
+
 ## Impact on existing code (if applicable)
 
 Existing services that desire to implement JWT RBAC must configure the container to support integration with an authorization implementation that is capable of parsing the JWT bearer token to validate the token and populate a security context with the caller and granted roles for use in ```getCallerPrincipal()/getUserPrincipal(), isCallerInRole(String)/isUserInRole(String)``` type of container methods.
