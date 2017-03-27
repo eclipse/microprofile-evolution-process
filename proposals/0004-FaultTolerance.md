@@ -61,20 +61,15 @@ Standardise the Fallback, Bulkhead and CircuitBreaker APIs and provide implement
 
 ### CDI-based approach 
 Use interceptor and annotation to specify the execution and policy configration.
-Define an interceptor binding to specify whether the execution is sync or asyn. Two interceptors should be provided by the implementation: AsyncExecutorInterceptor and SyncExecutorInterceptor
+An annotation of Asynchronous has to be specified for any asynchronous calls. Otherwise, synchronous execution is assumed. 
+The implementation should provide two interceptors, one for synchronous invocation and the other for asynchronous invocation. 
 ```
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.METHOD, ElementType.TYPE })
-@InterceptorBinding
 @Inherited
-public @interface Execution {
+public @interface Asynchronous {
 
-    Type value() default Type.SYNC;
-
-    enum Type {
-        ASYNC, SYNC;
-    };
 }
 ```
 #### RetryPolicy: A policy to define the retry criteria
@@ -106,9 +101,9 @@ public @interface Retry {
 
     TimeUnit bakeOffUnit() default TimeUnit.SECONDS;
 
-    Class<? extends Throwable>[] retryOn() default { RuntimeException.class };
+    Class<? extends Throwable>[] retryOn() default { Throwable.class };
 
-    Class<? extends Throwable>[] aboartOn() default { RuntimeException.class };
+    Class<? extends Throwable>[] aboartOn() default { Throwable.class };
 	String fallback() default "";
 }
 
@@ -122,7 +117,7 @@ public @interface Retry {
 @Target({ ElementType.TYPE, ElementType.METHOD })
 public @interface CircuitBreaker {
 
-    Class<? extends Throwable>[] failOn() default RuntimeException.class;
+    Class<? extends Throwable>[] failOn() default Throwable.class;
 
     long delay() default 2;
 
@@ -159,7 +154,6 @@ public @interface Bulkhead {
 An interceptor and fault tolerance policy can be applied to a bean or methods.
 ```
 @ApplicationScoped
-@Execution
 public class FaultToleranceBean {
    int i = 0;
    @Retry(maxRetries = 2)
