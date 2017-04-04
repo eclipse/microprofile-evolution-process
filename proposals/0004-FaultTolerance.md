@@ -81,30 +81,71 @@ An annotation to specify the max retries, delays, maxDuration, Duration unit, ji
 @Target({ ElementType.METHOD, ElementType.TYPE })
 public @interface Retry {
    
+   /**
+     *
+     * @return The max number of retries. -1 indicates retry forever.
+     * IllegalArgumentException if maxRetries <-1.
+     */
     int maxRetries() default 3;
 
+    /**
+     * The delay between retries. Defaults to {@link Duration#NONE}.
+     * @return
+     */
     int delay() default 0;
 
-    TimeUnit delayUnit() default TimeUnit.SECONDS;
+    /**
+     *
+     * @return the delay unit
+     */
 
+    TimeUnit delayUnit() default TimeUnit.MILLISECONDS;
+
+    /**
+     * @return the maximum duration to perform retries for.
+     */
     int maxDuration() default 20;
-    TimeUnit durationUnit() default TimeUnit.SECONDS;
-    int jitter() default 2;
 
-    int jitterFactor() default 2;
+    /**
+     *
+     * @return the duration unit
+     */
+    TimeUnit durationUnit() default TimeUnit.MILLISECONDS;
 
-    TimeUnit jitterDelayUnit() default TimeUnit.SECONDS;
+    /**
+     *
+     * @return the jitter that randomly vary retry delays by. e.g. a jitter of 200 milliseconds
+     * will randomly add betweem -200 and 200 milliseconds to each retry delay.
+     */
+    int jitter() default 200;
 
-    int backOff() default 2;
+    /**
+     *
+     * @return the jitter delay unit.
+     */
+    TimeUnit jitterDelayUnit() default TimeUnit.MILLISECONDS;
 
-    int backOffFactor() default 2;
+    /**
+     * For each retry delay, a randomly portion of the delay multiplied by the jitterFactor will be added or subtracted to the delay.
+     * e.g. a retry delay of 200 milliseconds and a jitter of 0.25 will result in a random retry delay between 150 and 250 milliseconds.
+     * @return the jitter factor.
+     */
 
-    TimeUnit bakeOffUnit() default TimeUnit.SECONDS;
+    double jitterFactor() default 0.25;
 
+    /**
+     *
+     * @return Specify the failure to retry on
+     */
     Class<? extends Throwable>[] retryOn() default { Throwable.class };
 
+    /**
+     *
+     * @return Specify the failure to abort on
+     */
     Class<? extends Throwable>[] aboartOn() default { Throwable.class };
-	String fallback() default "";
+
+
 }
 
 
@@ -117,24 +158,84 @@ public @interface Retry {
 @Target({ ElementType.TYPE, ElementType.METHOD })
 public @interface CircuitBreaker {
 
+        /**
+     * Define the failure criteria
+     * @return the failure exception
+     */
     Class<? extends Throwable>[] failOn() default Throwable.class;
 
+    /**
+     *
+     * @return The delay time after the circuit is open
+     */
     long delay() default 2;
+
+    /**
+     *
+     * @return The delay unit after the circuit is open
+     */
 
     TimeUnit delayUnit() default TimeUnit.SECONDS;
 
+    /**
+     *
+     * @return The failure threshold to open the circuit
+     */
     long failThreshold() default 2;
 
+    /**
+     *
+     * @return The success threshold to fully close the circuit
+     */
     long successThreshold() default 2;
 
-    long timeOut() default 2;
+}
+```
+#### Fallback
+```
+/**
+ * Define the Fallback annotation to specify the fallback callable, BiConsumer or BiFuncation
+ *@author Emily Jiang
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Target({ ElementType.TYPE, ElementType.METHOD })
+public @interface Fallback {
+
+    /**
+     *
+     * @return the fallback class
+     */
+    Class<?> fallback() default Callable.class;
 
 }
-
-
-
 ```
-#### Bulkhead - threadpool or semaphore styel
+#### Timeout to be used with either Retry or CircuitBreaker
+```
+/**
+ * The Retry annotation to define the number of the retries and the fallback method on reaching the
+ * retry counts.
+ */
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ ElementType.METHOD, ElementType.TYPE })
+public @interface TimeOut {
+
+    /**
+     *
+     * @return the timeout
+     */
+    long time() default 2;
+
+    /**
+     *
+     * @return the time unit
+     */
+    TimeUnit timeUnit() default TimeUnit.MILLISECONDS;
+
+}
+```
+#### Bulkhead - threadpool or semaphore style
 ```
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
