@@ -143,3 +143,9 @@ Thank you,
 The MicroProfile core team
 
 ---
+
+## Steps after a proposal has been accepted
+
+* Announce in the review mailing thread that the proposal has been accepted and that repositories are being created
+* Raise a bug for Eclipse to create a Github repsitory or ask for migration of an existing repository (see the [Eclipse Handbook](https://www.eclipse.org/projects/handbook/#resources-github))
+** When repositories are created, announce in a new thread that the proposal can be worked on in the new repository
