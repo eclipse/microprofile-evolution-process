@@ -144,6 +144,11 @@ public @interface Retry {
      * @return Specify the failure to abort on
      */
     Class<? extends Throwable>[] aboartOn() default { Throwable.class };
+	/**
+     *
+     * @return The fallback method name
+     */
+    String fallBack();
 
 
 }
@@ -206,7 +211,7 @@ public @interface Fallback {
      *
      * @return the fallback class
      */
-    Class<?> fallback() default Callable.class;
+    Class<?> fallback();
 
 }
 ```
@@ -258,12 +263,12 @@ An interceptor and fault tolerance policy can be applied to a bean or methods.
 public class FaultToleranceBean {
    int i = 0;
    @Retry(maxRetries = 2)
-   public void doWork() {
-      System.out.println("Doing work. "+i++);
-      if(i < 3) {
-         throw new RuntimeException("Boop");
-      }
+   public Runnable doWork() {
+      Runnable mainService = () -> serviceA(); // This unreliable service sometimes succeeds but
+                                         // sometimes throws a RuntimeException
+	  return mainService;								 
    }
+}
 }
 ```
 ### Non-CDI approach
