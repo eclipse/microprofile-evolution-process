@@ -406,7 +406,7 @@ Global tags will be appended to the per-metric tags.
       /** 1024 {@link #BYTE} */
       KILO_BYTE ("kbyte"),
       /** 1024 {@link #KILO_BYTE} */
-      MEGA_BYTE ("mbyte"), 
+      MEGA_BYTE ("mbyte"),
       /** 1024 {@link #MEGA_BYTE} */
       GIGA_BYTE("gbyte"),
 
@@ -437,13 +437,14 @@ Global tags will be appended to the per-metric tags.
 
     public class ApplicationMetrics implements Serializable {
       /**
-       * Register an application metric with a certain name and its metadata.
+       * Register an application metric via its metadata.
+       * It is required that each application metric has a unique name
+       * set in its metadata.
        * If a metric is registered, but no value has been set yet, it will
        * return 0 - both via REST api and via #getValue
-       * @param key The name of the metric
        * @param theData The metadata
        */
-      public void registerMetric(String key, MetadataEntry theData) {  }
+      public void registerMetric(MetadataEntry theData) { }
 
       /**
        * Store a value for key to be exposed by the rest-api
