@@ -1,7 +1,7 @@
 # Distributed tracing
 
 * Proposal: [MP-0005](0005-DistributedTracing.md)
-* Authors: [Akihiko Kuroda](https://github.com/<yourname>), [Steve Fontes](https://github.com/Steve-Fontes)
+* Authors: [Akihiko Kuroda](https://github.com/akihikokuroda), [Steve Fontes](https://github.com/Steve-Fontes)
 * Status: **Awaiting review**
 * Decision Notes: [Discussion thread topic covering the  Rationale](https://groups.google.com/forum/#!topic/microprofile/YxKba36lye4)
 
@@ -44,53 +44,40 @@ In order to make microprofile.io as flexible as possible for adding distributed 
 ## Proposed solution
 
 The [opentracing.io](http://opentracing.io) API provides a mechanism to include distributed tracing instrumentation across services written in different languages.
-The following are the three items proposed for providing distributed tracing in microprofile.io:
-1. Support opentracing.io as the underlying API for distributed tracing.
-2. Provide support in the framework to enable basic distributed tracing without modification to existing microprofile.io applications.
-3. Provide support in the framework to access opentracing.io objects for explicit distributed trace instrumentation within microprofile.io applications.
 
-### For item 1 - opentracing.io as the API for distributed tracing:  
-I don't think there is any implementation decisions here that would go across microprofile.io implementations. Just have to agree that applications written to the opentracing.io API will be supported.
+The following are the four items proposed for providing distributed tracing in microprofile.io:
+1. Support configuration of an opentracing.io compliant Tracer.  
+	(Specification does not need to contain how this would be implemented.)
 
-### For item 2 - Support distributed tracing without application modification
-This proposal does not need to explicitly define how item 2 will be implemented, since the implementation does not need to be exposed to the developer writing a microprofile.io application.
-However, the implementation must support the API's defined for item 3.
-We will need to at least provide a NOOP Tracer implementation. Behavior of the NOOP tracer should be agreed on.
+2. Provide support in the framework to enable basic distributed tracing without modification to existing microprofile.io applications.  
+	(Specification does not need to contain how this would be implemented.)
 
-### For item 3 - Support opentracing.io API for explicit distributed trace instrumentation
-Questions we have to answer for this item:
-1. How do we provide access to the Tracer object?
-2. How do we provide access to the Span that was created when a request arrived?
-3. What objects will the NOOP Tracer return?
-4. (Possibly) How do we provide access to the Span that is most recently active?
+3. Provide support in the framework to add distributed tracing records explicitly where needed by the developer.  
+  This would be implemented with four annotations:  
+	@StartDistributedTrace(operation=&lt;tracepointname&gt;, tags=&lt;map of tags&gt;, log=&lt;map of log data&gt;, baggage=&lt;map of baggage&gt;)  
+	@FinishDistributedTrace(operation=&lt;tracepointname&gt;, tags=&lt;map of tags&gt;, log=&lt;map of log data&gt;, baggage=&lt;map of baggage&gt;)  
+	@DistributedTrace(operation=&lt;tracepointname&gt;, tags=&lt;map of tags&gt;, log=&lt;map of log data&gt;, baggage=&lt;map of baggage&gt;)    
+	Applied to a block of code - Span started at beginning of block, Span finished at end of block.
+	@AppendToDistributedTrace(operation=&lt;tracepointname&gt;, tags=&lt;map of tags&gt;, log=&lt;map of log data&gt;, baggage=&lt;map of baggage&gt;)  
+	Adds tags, log data or baggage to the active span.  
+	The "tags", "log", and "baggage" parameters are optional for all annotations.
+  The operation names would have to match between StartDistributedTrace and FinishDistributedTrace operations.
 
-#### Existing opentracing.io API implementation for jax-rs
-There is currently an implemetation of the opentracing.io API for jax-rs at [opentracing-contrib/java-jaxrs/](https://github.com/opentracing-contrib/java-jaxrs/).
+4. Provide programmatic access for distributed tracing operations
+	This would be implemented by providing access to the configured Tracer object.
 
-This implementation passes the Tracer as an argument to the constructor of various objects, and then accesses the Tracer as a variable within the object.
+	**How do we want to do that? I don't think we want GlobalTracer.get() - probably something more CDIish.**
 
-This implementation stores the Span created when the request arrives as a property of the ContainerRequestContext. The arrival Span can be retrieved whenever the ContainerRequestContext is available. The arrival Span needs to be made available in an application specific way if you want to use it as a parent Span when making outbound requests.
-
-With this implementation, maintaining the most recently active span (if needed) is the responsibility of the application.
-
-A second implementation of the opentracing.io API for jax-rs is at https://github.com/uber/jaeger-client-java.
-
-#### Proposed microprofile.io API for opentracing.io
-##### Access to Tracer object
-TBD
-##### Access to upstream Span
-TBD
-##### Access to current active Span
-TBD
-##### Behavior of NOOP Tracer
-TBD
+	I think that is all we would need to make full access to opentracing.io function available.
+	Since it appears by https://github.com/opentracing/opentracing-java/pull/115 that the opentracing.io specification for Java will include
+	ActiveSpan span = tracer.activeSpan();
+	and support around that, we don't need to define how to expose active span as part of microprofile.io, that part of the opentracing.io spec will just have to be implemented in microprofile.io.
 
 ## Detailed design
 TBD
 
 ## Impact on existing code
 Per item 2, we will be able to enable distributed tracing for applications with no change to application code. This will have no affect on the logic of the application, but will cause distributed trace records to be produced.
-
 
 ## Alternatives considered
 Current mechanisms require a decision at development time about the distributed trace system that will be used.
