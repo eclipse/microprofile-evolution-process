@@ -115,16 +115,6 @@ should be sent to the Microprofile mailing list at
 
 > <https://groups.google.com/forum/#!forum/microprofile>
 
-Before participating in the review, here are some questions you might want to answer:
-
-* What is your evaluation of the proposal?
-* Is the problem being addressed significant enough to warrant a
-  change to Microprofile?
-* Does this proposal fit well with the feel and direction of Microprofile?
-* If you have used other languages or libraries with a similar
-  feature, how do you feel that this proposal compares to those?
-
----
 
 ##### What goes into a review?
 
@@ -147,6 +137,6 @@ More information about the Microprofile evolution process is available at
 
 Thank you,
 
-The MicroProfile core team
+The MicroProfile team
 
 ---
