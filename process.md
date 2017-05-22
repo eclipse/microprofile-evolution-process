@@ -78,27 +78,23 @@ repository](https://github.com/microprofile/evolution) will be updated to reflec
 ## Proposal states
 A given proposal can be in one of several states:
 
-* **Awaiting review**: The proposal is awaiting review. Once known,
-  the dates for the actual review will be placed in the proposal
-  document and updated in the [list of proposals](proposals.xml). When the
-  review period begins, the review manager will update the state to
+* **Awaiting review**: The proposal is awaiting review. It should be added into the [list of proposals](https://github.com/eclipse/microprofile/tree/master/proposals). When the
+  review period is announced (on the mailing list), the state transitions to
   *Active review*.
-* **Returned for revision**: The proposal has been returned from review
-  for additional revision to the current draft.
-* **Withdrawn**: The proposal has been withdrawn by the original submitter.
+* **Active review**: The proposal is being reviewed publicly after a review period is announced. The review may happen either in a dedicated thread in the mailing list or within the pull request with the proposal. After the specified review period, the Core team (core committers) should vote about accepting the proposal ASAP.
+* **Returned for revision**: The core team decided to return the proposal
+  for additional revision to the current draft. The proposal transitions to the *Awaiting review* state.
+* **Withdrawn**: The proposal has been withdrawn by the original submitter before accepted.
 * **Deferred**: Consideration of the proposal has been deferred
   because it does not meet the [goals of the upcoming major Microprofile
   release](README.md). Deferred proposals will be reconsidered when
-  scoping the next major Microprofile release.
-* **Accepted**: The proposal has been accepted and is either awaiting
+  scoping the next major Microprofile release. After reconsidered, the state may transition to the *Awaiting review* state.
+* **Accepted**: The proposal has been accepted by the core team and the proposed specification is either awaiting
   implementation or is actively being implemented.
-* **Accepted with revisions**: The proposal has been accepted,
-  contingent upon the inclusion of one or more revisions.
-* **Rejected**: The proposal has been considered and rejected.
-* **Implemented (Microprofile VERSION)**: The proposal has been implemented.
-  Append the version number in parentheses—for example: Implemented (Microprofile 2.2).
-  If the proposal's implementation spans multiple version numbers,
-  write the version number for which the implementation will be complete.
+* **Rejected**: The proposal has been considered by the core team and is rejected. This is a final state. A proposal in the *Rejected* state can only be resubmitted as a new proposal. Compare with the *Deferred* state, which is not a final state.
+* **Implemented (VERSION)**: The proposed specification has been implemented.
+  Append the version number in parentheses—for example: Implemented (1.0), or more specificlly with the specfication name: MicroProfile Config (1.0).
+* **Included (VERSION) in MicroProfile (MP-VERSION)**: An implemented specification, which is also included in a MicroProfile version. For example: MicroProfile Config 1.0 (Microprofile 1.1)
 
 ## Review announcement
 
@@ -118,6 +114,7 @@ Reviews are an important part of the Microprofile evolution process. All reviews
 should be sent to the Microprofile mailing list at
 
 > <https://groups.google.com/forum/#!forum/microprofile>
+
 
 ##### What goes into a review?
 
@@ -140,6 +137,6 @@ More information about the Microprofile evolution process is available at
 
 Thank you,
 
-The MicroProfile core team
+The MicroProfile team
 
 ---
