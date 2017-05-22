@@ -79,7 +79,7 @@ repository](https://github.com/microprofile/evolution) will be updated to reflec
 A given proposal can be in one of several states:
 
 * **Awaiting review**: The proposal is awaiting review. It should be added into the [list of proposals](https://github.com/eclipse/microprofile/tree/master/proposals). When the
-  review period is announced (no the mailing list), the state transitions to
+  review period is announced (on the mailing list), the state transitions to
   *Active review*.
 * **Active review**: The proposal is being reviewed publicly after a review period is announced. The review may happen either in a dedicated thread in the mailing list or within the pull request with the proposal. After the specified review period, the Core team (core committers) should vote about accepting the proposal ASAP.
 * **Returned for revision**: The core team decided to return the proposal
