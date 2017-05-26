@@ -1,7 +1,7 @@
 # MicroProfile 1.1
 
-* Proposal: link:0005-MicroProfile-1.1.md)[MP-0005]
-* Authors: link:https://github.com/kwsutter[Kevin Sutter], link:https://github.com/jclingan[John Clingan]
+* Proposal: [MP-0005](0005-MicroProfile-1.1.md)
+* Authors: [Kevin Sutter](https://github.com/kwsutter), [John Clingan](https://github.com/jclingan)
 * Status: **Awaiting review**
 
 *During the review process, add the following fields as needed:*
@@ -12,12 +12,12 @@
 
 MicroProfile 1.1 is the first update to the successful MicroProfile 1.0 release at
 JavaOne 2016.  The proposed content for MicroProfile 1.1 is MicroProfile 1.0 plus 
-link:https://github.com/eclipse/microprofile-evolution-process/blob/master/proposals/0001-config.md[Config API] and
-link:https://github.com/eclipse/microprofile-evolution-process/blob/master/proposals/0004-FaultTolerance.md[Fault Tolerance API].  
+[Config API](https://github.com/eclipse/microprofile-evolution-process/blob/master/proposals/0001-config.md) and
+[Fault Tolerance API](https://github.com/eclipse/microprofile-evolution-process/blob/master/proposals/0004-FaultTolerance.md).  
 The details of these individual features can be found in their respective
 proposals and repositories.
 
-Mailinglist thread: link:https://groups.google.com/forum/#!topic/microprofile/zTAuSTe6_So[MicroProfile Roadmap Discussion]
+Mailinglist thread: [MicroProfile Roadmap Discussion](https://groups.google.com/forum/#!topic/microprofile/zTAuSTe6_So)
 
 ## Motivation
 
@@ -47,8 +47,8 @@ to the Fault Tolerance capabilities in a follow-on release.
 N/A.  The detailed design, api, implementation, and test cases are contained within the
 respective sub-features:
 
-* link:https://github.com/eclipse/microprofile-config[Config API Repo]
-* link:https://github.com/eclipse/microprofile-fault-tolerance[Fault Tolerance API Repo]
+* [Config API Repo](https://github.com/eclipse/microprofile-config)
+* [Fault Tolerance API Repo](https://github.com/eclipse/microprofile-fault-tolerance)
 
 ## Impact on existing code (if applicable)
 
