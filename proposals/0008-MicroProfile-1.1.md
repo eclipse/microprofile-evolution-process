@@ -1,6 +1,6 @@
 # MicroProfile 1.1
 
-* Proposal: [MP-0005](0005-MicroProfile-1.1.md)
+* Proposal: [MP-0008](0008-MicroProfile-1.1.md)
 * Authors: [Kevin Sutter](https://github.com/kwsutter), [John Clingan](https://github.com/jclingan)
 * Status: **Awaiting review**
 
