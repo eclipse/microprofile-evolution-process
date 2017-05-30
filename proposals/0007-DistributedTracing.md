@@ -56,24 +56,24 @@ Specification does not need to contain how this would be implemented.
 This support is implemented with an @Trace annotation, an @NoTrace annotation, an @TraceStart annotation, an @TraceFinish annotation, and an @TraceDecorate annotation.
 
 The @Trace annotation, applies to a block of code. The annotation starts a Span at the beginning of the block, and finishes the Span at the end of the block. When applied to Class, the @Trace annotation is applied to all methods in the Class. The @Trace annotation has two optional arguments.
-* name=<Tracepoint name>. Defaults to ClassName.MethodName.
+* name=&lt;Tracepoint name&gt;. Defaults to ClassName.MethodName.
 * relationship=[ChildOf|FollowsFrom|New]. Default is ChildOf if a Span is active, else New.
 
 The @NoTrace annotation can only be applied to methods. The @NoTrace annotation overrides an @Trace annotation that was applied at the Class level. The @NoTrace annotation has no arguments.
 
 The @TraceStart annotation explicitly starts a Span that is explicitly finished with an @TraceFinish annotation. The @TraceStart annotation has two arguments.
-* name=<Tracepoint name>. Required.
+* name=&lt;Tracepoint name&gt;. Required.
 * relationship=[ChildOf|FollowsFrom|New]. Default is ChildOf if a Span is active, else New.
 
 The @TraceFinish annotation explicitly finishes a Span. The @TraceFinish annotation has one argument.
-* name=<Tracepoint name>. Required.
+* name=&lt;Tracepoint name&gt;. Required.
 
 For @TraceStart and @TraceFinish, it is the responsibility of the developer to choose names that are unique for all spans started by @TraceStart that can be active at the same time.
 
 The @TraceDecorate annotation adds information to the active Span. The @TraceDecorate can only be used when there is an active Span. The @TraceDecorate annotation has 3 optional arguments.
-* tags=<Map of tags>. Default is NULL. Records the tags into the Span.
-* logs=<Map of logs>. Default is NULL. Records the logs into the Span.
-* baggage=<Map of baggage>. Default is NULL. Records the baggages into the Span.
+* tags=&lt;Map of tags&gt;. Default is NULL. Records the tags into the Span.
+* logs=&lt;Map of logs&gt;. Default is NULL. Records the logs into the Span.
+* baggage=&lt;Map of baggage&gt;. Default is NULL. Records the baggages into the Span.
 
 ### Requirement 3. Provide programmatic access for distributed tracing operations
 The @Tracer annotation provides access to the configured Tracer object.
