@@ -1,6 +1,6 @@
 # Distributed tracing
 
-* Proposal: [MP-0005](0005-DistributedTracing.md)
+* Proposal: [MP-0007](0007-DistributedTracing.md)
 * Authors: [Akihiko Kuroda](https://github.com/akihikokuroda), [Steve Fontes](https://github.com/Steve-Fontes)
 * Status: **Awaiting review**
 * Decision Notes: [Discussion thread topic covering the  Rationale](https://groups.google.com/forum/#!topic/microprofile/YxKba36lye4)
@@ -45,39 +45,64 @@ In order to make microprofile.io as flexible as possible for adding distributed 
 
 The [opentracing.io](http://opentracing.io) API provides a mechanism to include distributed tracing instrumentation across services written in different languages.
 
-The following are the four items proposed for providing distributed tracing in microprofile.io:
-1. Support configuration of an opentracing.io compliant Tracer.  
-	(Specification does not need to contain how this would be implemented.)
+The following are the three requirements proposed for providing distributed tracing in microprofile.io:
 
-2. Provide support in the framework to enable basic distributed tracing without modification to existing microprofile.io applications.  
-	(Specification does not need to contain how this would be implemented.)
+### Requirement 1. Support configuration of an opentracing.io compliant Tracer
 
-3. Provide support in the framework to add distributed tracing records explicitly where needed by the developer.  
-  This would be implemented with four annotations:  
-	@StartDistributedTrace(operation=&lt;tracepointname&gt;, tags=&lt;map of tags&gt;, log=&lt;map of log data&gt;, baggage=&lt;map of baggage&gt;)  
-	@FinishDistributedTrace(operation=&lt;tracepointname&gt;, tags=&lt;map of tags&gt;, log=&lt;map of log data&gt;, baggage=&lt;map of baggage&gt;)  
-	@DistributedTrace(operation=&lt;tracepointname&gt;, tags=&lt;map of tags&gt;, log=&lt;map of log data&gt;, baggage=&lt;map of baggage&gt;)    
-	Applied to a block of code - Span started at beginning of block, Span finished at end of block.
-	@AppendToDistributedTrace(operation=&lt;tracepointname&gt;, tags=&lt;map of tags&gt;, log=&lt;map of log data&gt;, baggage=&lt;map of baggage&gt;)  
-	Adds tags, log data or baggage to the active span.  
-	The "tags", "log", and "baggage" parameters are optional for all annotations.
-  The operation names would have to match between StartDistributedTrace and FinishDistributedTrace operations.
+Specification does not need to contain how this would be implemented.
 
-4. Provide programmatic access for distributed tracing operations
-	This would be implemented by providing access to the configured Tracer object.
+### Requirement 2. Allow developer to Add distributed tracing records explicitly
 
-	**How do we want to do that? I don't think we want GlobalTracer.get() - probably something more CDIish.**
+This support is implemented with an @Trace annotation, an @NoTrace annotation, an @TraceStart annotation, an @TraceFinish annotation, and an @TraceDecorate annotation.
 
-	I think that is all we would need to make full access to opentracing.io function available.
-	Since it appears by https://github.com/opentracing/opentracing-java/pull/115 that the opentracing.io specification for Java will include
-	ActiveSpan span = tracer.activeSpan();
-	and support around that, we don't need to define how to expose active span as part of microprofile.io, that part of the opentracing.io spec will just have to be implemented in microprofile.io.
+The @Trace annotation, applies to a block of code. The annotation starts a Span at the beginning of the block, and finishes the Span at the end of the block. When applied to Class, the @Trace annotation is applied to all methods in the Class. The @Trace annotation has two optional arguments.
+* name=<Tracepoint name>. Defaults to ClassName.MethodName.
+* relationship=[ChildOf|FollowsFrom|New]. Default is ChildOf if a Span is active, else New.
+
+The @NoTrace annotation can only be applied to methods. The @NoTrace annotation overrides an @Trace annotation that was applied at the Class level. The @NoTrace annotation has no arguments.
+
+The @TraceStart annotation explicitly starts a Span that is explicitly finished with an @TraceFinish annotation. The @TraceStart annotation has two arguments.
+* name=<Tracepoint name>. Required.
+* relationship=[ChildOf|FollowsFrom|New]. Default is ChildOf if a Span is active, else New.
+
+The @TraceFinish annotation explicitly finishes a Span. The @TraceFinish annotation has one argument.
+* name=<Tracepoint name>. Required.
+
+For @TraceStart and @TraceFinish, it is the responsibility of the developer to choose names that are unique for all spans started by @TraceStart that can be active at the same time.
+
+The @TraceDecorate annotation adds information to the active Span. The @TraceDecorate can only be used when there is an active Span. The @TraceDecorate annotation has 3 optional arguments.
+* tags=<Map of tags>. Default is NULL. Records the tags into the Span.
+* logs=<Map of logs>. Default is NULL. Records the logs into the Span.
+* baggage=<Map of baggage>. Default is NULL. Records the baggages into the Span.
+
+### Requirement 3. Provide programmatic access for distributed tracing operations
+The @Tracer annotation provides access to the configured Tracer object.
+
+I think that is all we would need to make full access to opentracing.io function available.
+Since it appears by https://github.com/opentracing/opentracing-java/pull/115 that the opentracing.io specification for Java will include
+ActiveSpan span = tracer.activeSpan();
+and support around that, we don't need to define how to expose active span as part of microprofile.io, that part of the opentracing.io spec will just have to be implemented in microprofile.io.
 
 ## Detailed design
-TBD
+Example @Trace applied to a method:
+
+```
+@PATH("ServiceA")
+public Class MyService {
+	...
+	@GET
+	@PATH("Endpoint1")
+	@Trace
+	public String ServiceEndpoint1() {
+		...
+	}
+ ...
+}
+```
+The example starts a Span named MyService.ServiceEndpoint1 when the method ServiceEndpoint1 is invoked. The Span is finished when the method ends. If a Span is active when the method is invoked, the started Span will be a child of the active Span, otherwise a new Span is started.
 
 ## Impact on existing code
-Per item 2, we will be able to enable distributed tracing for applications with no change to application code. This will have no affect on the logic of the application, but will cause distributed trace records to be produced.
+Will have to add @Trace annotations to existing code.
 
 ## Alternatives considered
 Current mechanisms require a decision at development time about the distributed trace system that will be used.
