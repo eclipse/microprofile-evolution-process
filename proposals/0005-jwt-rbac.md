@@ -16,7 +16,7 @@ Mailinglist thread: [Discussion thread topic for that proposal](https://groups.g
 
 ## Motivation
 
-MicroProfile 1.1 is a baseline platform definition that optimizes Enterprise Java for a microservices architecture and delivers application portability across multiple MicroProfile runtimes. While Java EE is a very feature rich platform and is like a toolbox that can be used to to address a wide variety of application architectures, MicroProfile focuses on defining a small and a minimum set of Java EE standards that can be used to deliver applications based on a microservice architecture, are they:
+MicroProfile is a baseline platform definition that optimizes Enterprise Java for a microservices architecture and delivers application portability across multiple MicroProfile runtimes. While Java EE is a very feature rich platform and is like a toolbox that can be used to to address a wide variety of application architectures, MicroProfile focuses on defining a small and a minimum set of Java EE standards that can be used to deliver applications based on a microservice architecture, they are:
 
 * JAX-RS
 * CDI
@@ -79,7 +79,7 @@ There are few reasons why JWT is becoming so widely adopted:
 *Given its JSON nature, it is solely based on claims or attributes to carry authentication and authorization information about a subject.
 *Makes easier to support different types of access control mechanisms such as ABAC, RBAC, Context-Based Access Control, etc.
 *Message-level security using signature and encryption as defined by both JWS and JWE standards
-*Given its JSON nature, processing JWT tokens becomes trivial and lightweight. Especially if considering JEE standards such as JSON-P or the different third-party libraries out there such as Nimbus, Jackson, etc.
+*Given its JSON nature, processing JWT tokens becomes trivial and lightweight. Especially if considering Java EE standards such as JSON-P or the different third-party libraries out there such as Nimbus, Jackson, etc.
 *Parties can easily agree on a specific set of claims in order to exchange both authentication and authorization information
 *Widely adopted by different Single Sign-On solutions and well known standards such as OpenID Connect given its small overhead and ability to be used across different different security domains (federation)
 
@@ -92,6 +92,7 @@ The decision about using JWT as token format also depends on the agreement betwe
 As a recommendation, JWT tokens should follow the standard claims defined by [OpenID Connect Specification](http://openid.net/specs/openid-connect-core-1_0.html) to carry authentication related information about a subject. This specification defines a special type of token called ID Token, which defines a small set of required claims that can be used to identify the subject.
 ```json
   {
+      "jti": "5a785440-8cb4-4500-a9fc-0c3aec1e62d5",
    		"iss": "https://server.example.com",
    		"sub": "24400320",
    		"aud": "s6BhdRkqt3",
@@ -141,9 +142,10 @@ From an authorization perspective, we recommend two specific claims to carry rol
       }
   }
 ```
+
 The **realm_access** claim can be used to define which roles were granted to a subject at the realm or security domain level. On the other hand, the **resource_access** claim allows to define a different set of roles which are associated with a specific resource server or service.
 
-It is recommend that signature portion of the token should be signed using the RS256 algorithm using the RSA private key associated with the realm so that clients and services may verify the signature using the RSA realm public key. This corresponds to a JWT header with the following **alg** and **typ** claims:
+It is recommend that signature portion of the token should be signed using the RS256 algorithm using the RSA private key associated with the realm so that clients and services may verify the signature using the RSA realm public key. This corresponds to a JOSE header with the following **alg** and **typ** header fields:
 ```
 {
   "alg": "RS256",
@@ -154,7 +156,9 @@ It is recommend that signature portion of the token should be signed using the R
 
 ## Impact on existing code (if applicable)
 
-Existing services that desire to implement JWT RBAC must configure the container to support integration with an authorization implementation that is capable of parsing the JWT bearer token to validate the token and populate a security context with the caller and granted roles for use in ```getCallerPrincipal()/getUserPrincipal(), isCallerInRole(String)/isUserInRole(String)``` type of container methods.
+Existing services that desire to implement JWT RBAC must configure the container to support integration with an authorization implementation that is capable of parsing the JWT bearer token to validate the token and populate a security context with the caller and granted roles for use in ```getCallerPrincipal()/getUserPrincipal(), isCallerInRole(String)/isUserInRole(String), ``` type of container methods.
+
+### Example
 
 ## Alternatives considered
 
