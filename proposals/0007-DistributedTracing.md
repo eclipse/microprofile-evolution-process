@@ -51,37 +51,31 @@ The following are the three requirements proposed for providing distributed trac
 
 Specification does not need to contain how this would be implemented.
 
-### Requirement 2. Allow developer to Add distributed tracing records explicitly
+### Requirement 2. Allow developer to easily add tracing to an application
 
-This support is implemented with an @Trace annotation, an @NoTrace annotation, an @TraceStart annotation, an @TraceFinish annotation, and an @TraceDecorate annotation.
+This support is implemented with an @Trace annotation, an @NoTrace annotation, and an @TraceDecorate annotation.
 
+#### @Trace(name=&lt;Tracepoint name&gt;, relationship=[ChildOf|FollowsFrom|New])
 The @Trace annotation, applies to a block of code. The annotation starts a Span at the beginning of the block, and finishes the Span at the end of the block. When applied to Class, the @Trace annotation is applied to all methods in the Class. The @Trace annotation has two optional arguments.
 * name=&lt;Tracepoint name&gt;. Defaults to ClassName.MethodName.
 * relationship=[ChildOf|FollowsFrom|New]. Default is ChildOf if a Span is active, else New.
 
-The @NoTrace annotation can only be applied to methods. The @NoTrace annotation overrides an @Trace annotation that was applied at the Class level. The @NoTrace annotation has no arguments.
+#### @NoTrace
+The @NoTrace annotation can only be applied to methods. The @NoTrace annotation overrides an @Trace annotation that was applied at the Class level. The @NoTrace annotation has no arguments
 
-The @TraceStart annotation explicitly starts a Span that is explicitly finished with an @TraceFinish annotation. The @TraceStart annotation has two arguments.
-* name=&lt;Tracepoint name&gt;. Required.
-* relationship=[ChildOf|FollowsFrom|New]. Default is ChildOf if a Span is active, else New.
-
-The @TraceFinish annotation explicitly finishes a Span. The @TraceFinish annotation has one argument.
-* name=&lt;Tracepoint name&gt;. Required.
-
-For @TraceStart and @TraceFinish, it is the responsibility of the developer to choose names that are unique for all spans started by @TraceStart that can be active at the same time.
-
+#### @TraceDecorate(tags=&lt;Map of tags&gt;,logs=&lt;Map of logs&gt;,baggage=&lt;Map of baggage&gt;)
 The @TraceDecorate annotation adds information to the active Span. The @TraceDecorate can only be used when there is an active Span. The @TraceDecorate annotation has 3 optional arguments.
 * tags=&lt;Map of tags&gt;. Default is NULL. Records the tags into the Span.
 * logs=&lt;Map of logs&gt;. Default is NULL. Records the logs into the Span.
 * baggage=&lt;Map of baggage&gt;. Default is NULL. Records the baggages into the Span.
 
-### Requirement 3. Provide programmatic access for distributed tracing operations
+### Requirement 3. Provide direct programmatic access to opentracing.io API
 The @Tracer annotation provides access to the configured Tracer object.
 
-I think that is all we would need to make full access to opentracing.io function available.
-Since it appears by https://github.com/opentracing/opentracing-java/pull/115 that the opentracing.io specification for Java will include
-ActiveSpan span = tracer.activeSpan();
-and support around that, we don't need to define how to expose active span as part of microprofile.io, that part of the opentracing.io spec will just have to be implemented in microprofile.io.
+Access to the configured Tracer gives full access to opentracing.io functions.
+By https://github.com/opentracing/opentracing-java/pull/115, the opentracing.io specification for Java includes access to the active Span.
+
+Providing the Tracer object enables support for the more complex tracing requirements, such as when a Span is started in one method, and finished in another.
 
 ## Detailed design
 Example @Trace applied to a method:
@@ -102,7 +96,7 @@ public Class MyService {
 The example starts a Span named MyService.ServiceEndpoint1 when the method ServiceEndpoint1 is invoked. The Span is finished when the method ends. If a Span is active when the method is invoked, the started Span will be a child of the active Span, otherwise a new Span is started.
 
 ## Impact on existing code
-Will have to add @Trace annotations to existing code.
+@Trace annotations are added to existing code.
 
 ## Alternatives considered
 Current mechanisms require a decision at development time about the distributed trace system that will be used.
