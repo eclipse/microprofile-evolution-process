@@ -29,6 +29,10 @@ responsible for the strategic direction of Microprofile. *Core team members
 initiate, participate in, and manage the public review of proposals
 and have the authority to accept or reject changes to Microprofile.*
 
+In accordance with the requirements of Eclipse projects, you must have an [ECA on file](https://wiki.eclipse.org/Development_Resources/Contributing_via_Git#Eclipse_Contributor_Agreement) with the foundation
+and all commits that you raise to any Eclipse Microprofile repository, whether direct or via pull requests, must follow their [guidelines](https://wiki.eclipse.org/Development_Resources/Contributing_via_Git#Signing_off_on_a_commit).  Please review their entire [contributing
+guide](https://wiki.eclipse.org/Development_Resources/Contributing_via_Git) first.
+
 ## What goes into a review?
 
 The goal of the review process is to improve the proposal under review
