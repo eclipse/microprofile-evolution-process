@@ -1,0 +1,5 @@
+# Eclipse MicroProfile
+
+This repository is no longer the active process for submitting feature ideas for Eclipse MicroProfile.
+
+Please see https://wiki.eclipse.org/MicroProfile/FeatureInit for details of the current process.
