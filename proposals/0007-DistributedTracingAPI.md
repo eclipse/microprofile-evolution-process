@@ -15,6 +15,8 @@ The storage service for distributed trace records can provide features to view t
 
 It will be useful for services written in the microprofile.io framework to be able to integrate well with a distributed trace system that is part of the larger microservices environment.
 
+This proposal defines an API and microprofile.io behaviors that allow services to easily participate in an environment where distributed tracing is enabled.
+
 Mailinglist thread: [Discussion thread topic for that proposal](https://groups.google.com/forum/#!topic/microprofile/YxKba36lye4)
 
 ## Motivation
@@ -41,11 +43,15 @@ without having to explicitly add distributed tracing code to the application.
 
 In order to make microprofile.io as flexible as possible for adding distributed trace log records, microprofile.io should expose whatever objects are necessary for an application to use the opentracing.io API.
 
+This proposal specifically addresses the problem of making it easy to instrument services with distributed tracing function, given an existing distributed tracing system in the environment.
+
+This proposal specifically does not address the problem of defining, implementing, or configuring the underlying distributed tracing system. The proposal assumes an environment where all services use a common opentracing.io implementation (all zipkin compatible, all jaeger compatible, ...). At some point it would be beneficial to define another specification that allows inter-operation between different opentracing.io implementations.
+
 ## Proposed solution
 
 The [opentracing.io](http://opentracing.io) API provides a mechanism to include distributed tracing instrumentation across services written in different languages.
 
-The following are the three requirements proposed for providing distributed tracing in microprofile.io:
+The following are the five requirements proposed for providing distributed tracing instrumentation in microprofile.io:
 
 ### Requirement 1. Support configuration of an opentracing.io compliant Tracer
 
@@ -76,6 +82,16 @@ Access to the configured Tracer gives full access to opentracing.io functions.
 By https://github.com/opentracing/opentracing-java/pull/115, the opentracing.io specification for Java includes access to the active Span.
 
 Providing the Tracer object enables support for the more complex tracing requirements, such as when a Span is started in one method, and finished in another.
+
+### Requirement 4. Automatically handle a Span extracted from an incoming request
+
+Any method annotated @GET, @PUT, @POST, @DELETE, or @PATCH will have @Trace annotation implicitly added for microprofile.io applications.
+
+In this case an attempt is made to use the configured Tracer to extract a Span from the arriving request headers. If a Span is extracted, it is used as the parent Span for the new Span that is created for the method. This allows a microprofile.io application to easily participate in distributed Span correlation.
+
+### Requirement 5. Automatically inject a Span into outgoing requests
+
+A request for a javax.ws.rs.client.Client will deliver a Client that is extended (decorated, has feature registered, ...) in some way so that when an outbound request is made with that Client, a new Span will be created that is inserted in the outbound request for propagation downstream. The new Span will be a child of the current Span if a current Span exists. The new Span will be finished when the outbound request is completed. This extends the capability for a microprofile.io application to participate in distributed Span correlation.
 
 ## Detailed design
 Example @Trace applied to a method:
