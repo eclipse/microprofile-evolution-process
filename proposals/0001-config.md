@@ -13,8 +13,8 @@
 
 Sometimes it is not realistic to package application configurations within the application. For example, some configurations need to be secured and/or dynamic or be configured based on the running environment. As a consequence, these configurations need to be stored externally.
 
-A number of open source projects such as Archaius, Apache Commons, Tamaya, DeltaSpike etc are
-trying to deal with dynamic and external configurations. Since no Configuration standard exists in JavaEE specifications, it makes the interop very difficult.
+A number of open source projects such as [Archaius](https://github.com/Netflix/archaius), [Apache Commons Configuration](http://commons.apache.org/proper/commons-configuration/), [Apache Tamaya](http://tamaya.incubator.apache.org/), [Apache DeltaSpike](https://deltaspike.apache.org/) etc. are trying to deal with dynamic and external configurations.
+Since no Configuration standard exists in JavaEE specifications, it makes the interop very difficult.
 
 The lack of Configuration standard significantly impacts the interoperability of microservices. Configuration is a central part of the microservice programming model. The Configuration needs to be standardised. This proposal is to address the requirements: standardise Configuration APIs and Reference Implementations. With the standardisation, all Java applications not only microservices should benefit from this effort.
 
