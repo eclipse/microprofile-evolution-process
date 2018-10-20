@@ -75,13 +75,13 @@ The use case can be described as follows:
 [JWT](https://tools.ietf.org/html/rfc7519) tokens follow a well defined and known standard that is becoming the most common token format to protect services. It not only provides a token format but additional security aspects like signature and encryption based on another set of standards like JWS, JWE and others.
 
 There are few reasons why JWT is becoming so widely adopted:
-*Token validation doesn’t require an additional trip and can be validated locally by each service
-*Given its JSON nature, it is solely based on claims or attributes to carry authentication and authorization information about a subject.
-*Makes easier to support different types of access control mechanisms such as ABAC, RBAC, Context-Based Access Control, etc.
-*Message-level security using signature and encryption as defined by both JWS and JWE standards
-*Given its JSON nature, processing JWT tokens becomes trivial and lightweight. Especially if considering Java EE standards such as JSON-P or the different third-party libraries out there such as Nimbus, Jackson, etc.
-*Parties can easily agree on a specific set of claims in order to exchange both authentication and authorization information
-*Widely adopted by different Single Sign-On solutions and well known standards such as OpenID Connect given its small overhead and ability to be used across different different security domains (federation)
+* Token validation doesn’t require an additional trip and can be validated locally by each service
+* Given its JSON nature, it is solely based on claims or attributes to carry authentication and authorization information about a subject.
+* Makes easier to support different types of access control mechanisms such as ABAC, RBAC, Context-Based Access Control, etc.
+* Message-level security using signature and encryption as defined by both JWS and JWE standards
+* Given its JSON nature, processing JWT tokens becomes trivial and lightweight. Especially if considering Java EE standards such as JSON-P or the different third-party libraries out there such as Nimbus, Jackson, etc.
+* Parties can easily agree on a specific set of claims in order to exchange both authentication and authorization information
+* Widely adopted by different Single Sign-On solutions and well known standards such as OpenID Connect given its small overhead and ability to be used across different different security domains (federation)
 
 
 
